@@ -59,35 +59,37 @@ class Sudoku:
         return all(self.get_row(row) == FULL for row in range(9)) and \
             all(self.get_col(col) == FULL for col in range(9))
 
-    def table(self):
-        "Return table"
-        string = "╔═══╤═══╤═══╦═══╤═══╤═══╦═══╤═══╤═══╗\n"
-        for row in range(9):
-            string += "║ {} │ {} │ {} ║ {} │ {} │ {} ║ {} │ {} │ {} ║\n".format(*self.grid[row])
-            if row == 8:
-                string += "╚═══╧═══╧═══╩═══╧═══╧═══╩═══╧═══╧═══╝\n"
-            elif (row + 1) % 3:
-                string += "╟───┼───┼───╫───┼───┼───╫───┼───┼───╢\n"
-            else:
-                string += "╠═══╪═══╪═══╬═══╪═══╪═══╬═══╪═══╪═══╣\n"
-        return string.replace("0", " ")
 
-    def show(self):
-        "Show table"
-        string = self.table()
-        cls = "\033c"
-        columns, lines = get_terminal_size()
-        spaces = " " * ((columns - 37) // 2)
-        lines = "\n" * ((lines - 19) // 2)
-        string = f"{spaces}{string}"
-        string = string.replace("\n", f"\n{spaces}")
-        print(cls, lines, string, lines, sep="")
+def table(grid):
+    "Return table"
+    string = "╔═══╤═══╤═══╦═══╤═══╤═══╦═══╤═══╤═══╗\n"
+    for row in range(9):
+        string += "║ {} │ {} │ {} ║ {} │ {} │ {} ║ {} │ {} │ {} ║\n".format(*grid[row])
+        if row == 8:
+            string += "╚═══╧═══╧═══╩═══╧═══╧═══╩═══╧═══╧═══╝\n"
+        elif (row + 1) % 3:
+            string += "╟───┼───┼───╫───┼───┼───╫───┼───┼───╢\n"
+        else:
+            string += "╠═══╪═══╪═══╬═══╪═══╪═══╬═══╪═══╪═══╣\n"
+    return string.replace("0", " ")
+
+
+def show(grid):
+    "Show table"
+    string = table(grid)
+    cls = "\033c"
+    columns, lines = get_terminal_size()
+    spaces = " " * ((columns - 37) // 2)
+    lines = "\n" * ((lines - 19) // 2)
+    string = f"{spaces}{string}"
+    string = string.replace("\n", f"\n{spaces}")
+    print(cls, lines, string, lines, sep="")
 
 
 if __name__ == "__main__":
     HARDER = "005300000800000020070010500400005300010070006003200080060500009004000030000009700"
     sudoku = Sudoku(HARDER)
     sudoku.solver()
-    sudoku.show()
+    show(sudoku.grid)
     if not sudoku.validate():
         sys.exit(1)
