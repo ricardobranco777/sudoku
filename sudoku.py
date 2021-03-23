@@ -1,6 +1,7 @@
 """Sudoku"""
 
 import sys
+from random import shuffle
 from shutil import get_terminal_size
 
 
@@ -43,10 +44,12 @@ class Sudoku:
                 if self.grid[row][col] == 0:
                     yield row, col
 
-    def solver(self):
+    def solver(self, random=True):
         "Backtracking solver"
         for row, col in self.scan():
-            try_digits = FULL - self.get_row(row) - self.get_col(col) - self.get_box(row, col)
+            try_digits = list(FULL - self.get_row(row) - self.get_col(col) - self.get_box(row, col))
+            if random:
+                shuffle(try_digits)
             for num in try_digits:
                 self.grid[row][col] = num
                 if self.solver():
