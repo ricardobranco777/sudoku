@@ -23,16 +23,16 @@ class Sudoku:
 
     def get_row(self, row):
         "Get row"
-        return tuple(self.grid[row])
+        return set(self.grid[row])
 
     def get_col(self, col):
         "Get column"
-        return tuple(self.grid[i][col] for i in range(9))
+        return set(self.grid[i][col] for i in range(9))
 
     def get_box(self, row, col):
         "Get box"
         x, y = 3 * (row // 3), 3 * (col // 3)
-        return tuple(self.grid[x + i][y + j] for i in range(3) for j in range(3))
+        return set(self.grid[x + i][y + j] for i in range(3) for j in range(3))
 
     def scan(self):
         "Scan grid for zeroes"
@@ -53,7 +53,7 @@ class Sudoku:
     def solver(self):
         "Backtracking solver"
         for row, col in self.scan():
-            try_digits = FULL - set(self.get_row(row)) - set(self.get_col(col)) - set(self.get_box(row, col))
+            try_digits = FULL - self.get_row(row) - self.get_col(col) - self.get_box(row, col)
             for num in try_digits:
                 self.setitem(row, col, num)
                 if self.solver():
@@ -64,11 +64,11 @@ class Sudoku:
 
     def validate_row(self, row):
         "Validate row"
-        return set(self.get_row(row)) == FULL
+        return self.get_row(row) == FULL
 
     def validate_col(self, col):
         "Validate column"
-        return set(self.get_col(col)) == FULL
+        return self.get_col(col) == FULL
 
     def validate(self):
         "Validate grid"
