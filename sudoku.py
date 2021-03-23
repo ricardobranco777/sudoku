@@ -29,8 +29,8 @@ class Sudoku:
 
     def get_box(self, row, col):
         "Get box"
-        x, y = 3 * (row // 3), 3 * (col // 3)
-        return set(self.grid[x + i][y + j] for i in range(3) for j in range(3))
+        row, col = 3 * (row // 3), 3 * (col // 3)
+        return set(self.grid[row + i][col + j] for i in range(3) for j in range(3))
 
     def scan(self):
         "Scan grid for zeroes"
@@ -51,35 +51,27 @@ class Sudoku:
             return False
         return self.validate()
 
-    def validate_row(self, row):
-        "Validate row"
-        return self.get_row(row) == FULL
-
-    def validate_col(self, col):
-        "Validate column"
-        return self.get_col(col) == FULL
-
     def validate(self):
         "Validate grid"
-        return all(self.validate_row(row) for row in range(9)) and \
-            all(self.validate_col(col) for col in range(9))
+        return all(self.get_row(row) == FULL for row in range(9)) and \
+            all(self.get_col(col) == FULL for col in range(9))
 
-    def display(self):
-        "Display grid"
+    def table(self):
+        "Return table"
         string = "╔═══╤═══╤═══╦═══╤═══╤═══╦═══╤═══╤═══╗\n"
         for row in range(9):
             string += "║ {} │ {} │ {} ║ {} │ {} │ {} ║ {} │ {} │ {} ║\n".format(*self.grid[row])
             if row == 8:
                 string += "╚═══╧═══╧═══╩═══╧═══╧═══╩═══╧═══╧═══╝\n"
-            elif (row + 1) % 3 == 0:
-                string += "╠═══╪═══╪═══╬═══╪═══╪═══╬═══╪═══╪═══╣\n"
-            else:
+            elif (row + 1) % 3:
                 string += "╟───┼───┼───╫───┼───┼───╫───┼───┼───╢\n"
+            else:
+                string += "╠═══╪═══╪═══╬═══╪═══╪═══╬═══╪═══╪═══╣\n"
         return string.replace("0", " ")
 
     def show(self):
-        "Show grid"
-        string = self.display()
+        "Show table"
+        string = self.table()
         cls = "\033c"
         columns, lines = get_terminal_size()
         spaces = " " * ((columns - 37) // 2)

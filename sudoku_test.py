@@ -10,7 +10,7 @@ VALID = "12345678945678912378912345623156489756489723189723156431264597864597831
 INVALID = VALID[:-1] + "1"
 
 INCOMPLETE = "123456789456789123789123456231564897564897231897231564312645978645978312978312640"
-INCOMPLETE_DISPLAY = """
+INCOMPLETE_TABLE = """
 ╔═══╤═══╤═══╦═══╤═══╤═══╦═══╤═══╤═══╗
 ║ 1 │ 2 │ 3 ║ 4 │ 5 │ 6 ║ 7 │ 8 │ 9 ║
 ╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
@@ -41,7 +41,7 @@ HARDER_SOLVED = "145327698839654127672918543496185372218473956753296481367542819
 IMPOSSIBLE = "609008750300900001000000200830010006002003000560070009000000100100300007703001560"
 
 
-class Test_Sudoku(unittest.TestCase):
+class TestSudoku(unittest.TestCase):
     "Test Sudoku"
 
     def test_validate1(self):
@@ -67,10 +67,10 @@ class Test_Sudoku(unittest.TestCase):
             _ = Sudoku(1)
             _ = Sudoku("blabla")
 
-    def test_display(self):
-        "Test display"
+    def test_table(self):
+        "Test table"
         sudoku = Sudoku(INCOMPLETE)
-        self.assertEqual(sudoku.display(), INCOMPLETE_DISPLAY.lstrip())
+        self.assertEqual(sudoku.table(), INCOMPLETE_TABLE.lstrip())
 
     def test_str(self):
         "Test normalize"
