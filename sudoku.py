@@ -56,7 +56,11 @@ class Sudoku:
                     return True
             self.grid[row][col] = 0
             return False
-        return self.validate()
+        return True
+
+    def generate(self):
+        "Generate random complete puzzle"
+        return self.solver(random=True)
 
     def validate(self):
         "Validate grid"

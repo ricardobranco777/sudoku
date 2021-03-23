@@ -59,3 +59,9 @@ class TestSudoku(unittest.TestCase):
         sudoku.solver()
         self.assertEqual(str(sudoku), IMPOSSIBLE)
         self.assertFalse(sudoku.validate())
+
+    def test_generate(self):
+        "Test generator"
+        sudoku = Sudoku()
+        sudoku.generate()
+        self.assertTrue(sudoku.validate())
