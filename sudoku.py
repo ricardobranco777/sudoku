@@ -10,12 +10,13 @@ FULL = {1, 2, 3, 4, 5, 6, 7, 8, 9}
 
 class Sudoku:
     """Sudoku"""
-    def __init__(self, digits="0" * 81):
+    def __init__(self, digits="0" * 81, seconds=0):
         digits = "".join(map(str, digits))
         if len(digits) == 81 and digits.isdigit():
             self.grid = [[int(digits[row * 9 + col]) for col in range(9)] for row in range(9)]
         else:
             raise ValueError("Invalid table")
+        self.seconds = seconds
 
     def __str__(self):
         return "".join(str(self.grid[row][col]) for row in range(9) for col in range(9))
@@ -93,6 +94,15 @@ class Sudoku:
                 if self.grid[row][col] == 0:
                     yield row, col
 
+    def setitem(self, row, col, value):
+        "Set item in grid, optionally show change"
+        if self.seconds:
+            self.show()
+            time.sleep(self.seconds)
+        self.grid[row][col] = value
+        if self.seconds:
+            self.show()
+
     def check_box(self, row, col):
         "Check box"
         box = self.get_box(row, col)
@@ -101,7 +111,7 @@ class Sudoku:
             x, y = 3 * (row // 3), 3 * (col // 3)
             index = box.index(0)
             i, j = index // 3, index % 3
-            self.grid[x + i][y + j] = missing.pop()
+            self.setitem(x + i, y + j, missing.pop())
             return True
         return False
 
@@ -115,7 +125,7 @@ class Sudoku:
                 maybe[num].append(try_col)
         for num in maybe:
             if len(maybe[num]) == 1:
-                self.grid[row][maybe[num][0]] = num
+                self.setitem(row, maybe[num][0], num)
                 solved += 1
         return solved
 
@@ -129,7 +139,7 @@ class Sudoku:
                 maybe[num].append(try_row)
         for num in maybe:
             if len(maybe[num]) == 1:
-                self.grid[maybe[num][0]][col] = num
+                self.setitem(maybe[num][0], col, num)
                 solved += 1
         return solved
 
@@ -140,13 +150,13 @@ class Sudoku:
         missing = FULL - set(diag)
         if len(missing) == 1:
             index = diag.index(0)
-            self.grid[index][index] = missing.pop()
+            self.setitem(index, index, missing.pop())
             solved += 1
         diag = self.get_diag(1)
         missing = FULL - set(diag)
         if len(missing) == 1:
             index = diag.index(0)
-            self.grid[index][8 - index] = missing.pop()
+            self.setitem(index, 8 - index, missing.pop())
             solved += 1
         return solved
 
@@ -165,17 +175,23 @@ class Sudoku:
         solved += self.check_diags()
         return solved
 
-    def solver(self, show=True, seconds=1):
+    def solve2(self):
+        "Backtracking solver"
+        for row, col in self.scan():
+            try_digits = FULL - set(self.get_row(row)) - set(self.get_col(col)) - set(self.get_box(row, col))
+            for num in try_digits:
+                self.setitem(row, col, num)
+                if self.solve2():
+                    return True
+            self.setitem(row, col, 0)
+            return False
+        return self.validate()
+
+    def solver(self):
         "Solver"
-        if show:
-            sudoku.show()
-        if seconds:
-            time.sleep(seconds)
         while self.solve1():
-            if show:
-                sudoku.show()
-            if seconds:
-                time.sleep(seconds)
+            pass
+        self.solve2()
 
     def validate_row(self, row):
         "Validate row"
@@ -217,7 +233,9 @@ class Sudoku:
 if __name__ == "__main__":
     EASY = "000401000004020500069050810602905108107806309000000000700104002000060000300000007"
     MEDIUM = "096000008000800240208010009000637000013000000000125000701060004000500690064000001"
-    sudoku = Sudoku(EASY)
+    HARDER = "005300000800000020070010500400005300010070006003200080060500009004000030000009700"
+    sudoku = Sudoku(HARDER, seconds=0.01)
     sudoku.solver()
+    sudoku.show()
     if not sudoku.validate():
         sys.exit(1)

@@ -38,6 +38,9 @@ INCOMPLETE_DISPLAY = """
 EASY = "000401000004020500069050810602905108107806309000000000700104002000060000300000007"
 EASY_SOLVED = "573481296814629573269357814632975148157846329498213765786134952925768431341592687"
 
+HARDER = "005300000800000020070010500400005300010070006003200080060500009004000030000009700"
+HARDER_SOLVED = "145327698839654127672918543496185372218473956753296481367542819984761235521839764"
+
 
 def random_digits():
     "Return 9 random digits from 1..9 except one random replaced by 0"
@@ -115,9 +118,16 @@ class Test_Sudoku(unittest.TestCase):
                 self.assertTrue(sudoku.check_box(row, col))
                 self.assertEqual(set(sudoku.get_box(row, col)), DIGITS)
 
-    def test_solver(self):
+    def test_solver1(self):
         "Test solver"
         sudoku = Sudoku(EASY)
-        sudoku.solver(show=False, seconds=0)
+        sudoku.solver()
         self.assertEqual(str(sudoku), EASY_SOLVED)
+        self.assertTrue(sudoku.validate())
+
+    def test_solver2(self):
+        "Test solver"
+        sudoku = Sudoku(HARDER)
+        sudoku.solver()
+        self.assertEqual(str(sudoku), HARDER_SOLVED)
         self.assertTrue(sudoku.validate())
