@@ -1,13 +1,10 @@
 "Sudoku test"
 
 
-import random
 import unittest
 
 from sudoku import Sudoku
 
-
-DIGITS = {1, 2, 3, 4, 5, 6, 7, 8, 9}
 
 VALID = "123456789456789123789123456231564897564897231897231564312645978645978312978312645"
 INVALID = VALID[:-1] + "1"
@@ -41,12 +38,7 @@ EASY_SOLVED = "57348129681462957326935781463297514815784632949821376578613495292
 HARDER = "005300000800000020070010500400005300010070006003200080060500009004000030000009700"
 HARDER_SOLVED = "145327698839654127672918543496185372218473956753296481367542819984761235521839764"
 
-
-def random_digits():
-    "Return 9 random digits from 1..9 except one random replaced by 0"
-    digits = list(DIGITS)
-    random.shuffle(digits)
-    return "".join(map(str, digits)).replace(str(random.choice(digits)), "0")
+IMPOSSIBLE = "609008750300900001000000200830010006002003000560070009000000100100300007703001560"
 
 
 class Test_Sudoku(unittest.TestCase):
@@ -85,49 +77,16 @@ class Test_Sudoku(unittest.TestCase):
         sudoku = Sudoku(VALID)
         self.assertEqual(str(sudoku), VALID)
 
-    def test_check_row(self):
-        "Test check_row()"
-        for row in range(9):
-            sudoku = Sudoku()
-            sudoku.set_row(row, random_digits())
-            sudoku.check_row(row)
-            self.assertEqual(set(sudoku.get_row(row)), DIGITS)
-
-    def test_check_col(self):
-        "Test check_col()"
-        for col in range(9):
-            sudoku = Sudoku()
-            sudoku.set_col(col, random_digits())
-            sudoku.check_col(col)
-            self.assertEqual(set(sudoku.get_col(col)), DIGITS)
-
-    def test_check_diag(self):
-        "Test check_diag()"
-        for diag in range(2):
-            sudoku = Sudoku()
-            sudoku.set_diag(diag, random_digits())
-            sudoku.check_diags()
-            self.assertEqual(set(sudoku.get_diag(diag)), DIGITS)
-
-    def test_check_box(self):
-        "Test check box"
-        for row in range(9):
-            for col in range(9):
-                sudoku = Sudoku()
-                sudoku.set_box(row, col, random_digits())
-                self.assertTrue(sudoku.check_box(row, col))
-                self.assertEqual(set(sudoku.get_box(row, col)), DIGITS)
-
-    def test_solver1(self):
-        "Test solver"
-        sudoku = Sudoku(EASY)
-        sudoku.solver()
-        self.assertEqual(str(sudoku), EASY_SOLVED)
-        self.assertTrue(sudoku.validate())
-
-    def test_solver2(self):
+    def test_solver(self):
         "Test solver"
         sudoku = Sudoku(HARDER)
         sudoku.solver()
         self.assertEqual(str(sudoku), HARDER_SOLVED)
         self.assertTrue(sudoku.validate())
+
+    def test_solver2(self):
+        "Test solver on impossible"
+        sudoku = Sudoku(IMPOSSIBLE)
+        sudoku.solver()
+        self.assertEqual(str(sudoku), IMPOSSIBLE)
+        self.assertFalse(sudoku.validate())
