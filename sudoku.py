@@ -80,15 +80,12 @@ class Sudoku:
     def show(self):
         "Show grid"
         string = self.display()
-        if sys.stdout.isatty():
-            cls = "\033c"
-            columns, lines = get_terminal_size()
-            spaces = " " * ((columns - 37) // 2)
-            lines = "\n" * ((lines - 19) // 2)
-            string = f"{spaces}{string}"
-            string = string.replace("\n", f"\n{spaces}")
-        else:
-            cls = lines = ""
+        cls = "\033c"
+        columns, lines = get_terminal_size()
+        spaces = " " * ((columns - 37) // 2)
+        lines = "\n" * ((lines - 19) // 2)
+        string = f"{spaces}{string}"
+        string = string.replace("\n", f"\n{spaces}")
         print(cls, lines, string, lines, sep="")
 
 
