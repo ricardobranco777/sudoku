@@ -16,6 +16,9 @@ class Sudoku:
         else:
             raise ValueError("Invalid table")
 
+    def __repr__(self):
+        return str(self.grid)
+
     def __str__(self):
         return "".join(str(self.grid[row][col]) for row in range(9) for col in range(9))
 
