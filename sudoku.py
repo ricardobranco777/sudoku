@@ -32,7 +32,8 @@ class Sudoku:
 
     def get_box(self, row, col):
         "Get box"
-        row, col = 3 * (row // 3), 3 * (col // 3)
+        row -= row % 3
+        col -= col % 3
         return set(self.grid[row + i][col + j] for i in range(3) for j in range(3))
 
     def scan(self):
