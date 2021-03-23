@@ -1,7 +1,6 @@
 """Sudoku"""
 
 import sys
-import time
 from shutil import get_terminal_size
 
 
@@ -10,13 +9,12 @@ FULL = {1, 2, 3, 4, 5, 6, 7, 8, 9}
 
 class Sudoku:
     """Sudoku"""
-    def __init__(self, digits="0" * 81, seconds=0):
+    def __init__(self, digits="0" * 81):
         digits = "".join(map(str, digits))
         if len(digits) == 81 and digits.isdigit():
             self.grid = [[int(digits[row * 9 + col]) for col in range(9)] for row in range(9)]
         else:
             raise ValueError("Invalid table")
-        self.seconds = seconds
 
     def __str__(self):
         return "".join(str(self.grid[row][col]) for row in range(9) for col in range(9))
@@ -41,24 +39,15 @@ class Sudoku:
                 if self.grid[row][col] == 0:
                     yield row, col
 
-    def setitem(self, row, col, value):
-        "Set item in grid, optionally show change"
-        if self.seconds:
-            self.show()
-            time.sleep(self.seconds)
-        self.grid[row][col] = value
-        if self.seconds:
-            self.show()
-
     def solver(self):
         "Backtracking solver"
         for row, col in self.scan():
             try_digits = FULL - self.get_row(row) - self.get_col(col) - self.get_box(row, col)
             for num in try_digits:
-                self.setitem(row, col, num)
+                self.grid[row][col] = num
                 if self.solver():
                     return True
-            self.setitem(row, col, 0)
+            self.grid[row][col] = 0
             return False
         return self.validate()
 
@@ -104,11 +93,8 @@ class Sudoku:
 
 
 if __name__ == "__main__":
-    EASY = "000401000004020500069050810602905108107806309000000000700104002000060000300000007"
-    MEDIUM = "096000008000800240208010009000637000013000000000125000701060004000500690064000001"
-    HARDER = "609008750300900001000000200830010006002003000560070009000000100100300007703001560"
     HARDER = "005300000800000020070010500400005300010070006003200080060500009004000030000009700"
-    sudoku = Sudoku(HARDER, seconds=0)
+    sudoku = Sudoku(HARDER)
     sudoku.solver()
     sudoku.show()
     if not sudoku.validate():
