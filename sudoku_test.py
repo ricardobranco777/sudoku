@@ -65,3 +65,10 @@ class TestSudoku(unittest.TestCase):
         sudoku = Sudoku()
         sudoku.generate()
         self.assertTrue(sudoku.validate())
+
+    def test_generate2(self):
+        "Test generator"
+        sudoku = Sudoku()
+        sudoku.generate(difficulty=5)
+        sudoku.solver()
+        self.assertTrue(sudoku.validate())

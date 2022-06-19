@@ -65,6 +65,12 @@ class Sudoku:
         self.solver(random=True)
         if difficulty is None:
             return
+        cols = list(range(9))
+        for row in range(9):
+            shuffle(cols)
+            for col in cols[:difficulty]:
+                self.grid[row][col] = 0
+
 
     def validate(self):
         "Validate grid"
