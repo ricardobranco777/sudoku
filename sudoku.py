@@ -60,10 +60,11 @@ class Sudoku:
             return False
         return True
 
-    def generate(self, difficulty=None):
+    def generate(self, difficulty=0):
         "Generate puzzle"
+        assert difficulty in range(9)
         self.solver(random=True)
-        if difficulty is None:
+        if not difficulty:
             return
         cols = list(range(9))
         for row in range(9):

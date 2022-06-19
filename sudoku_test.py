@@ -68,7 +68,8 @@ class TestSudoku(unittest.TestCase):
 
     def test_generate2(self):
         "Test generator"
-        sudoku = Sudoku()
-        sudoku.generate(difficulty=5)
-        sudoku.solver()
-        self.assertTrue(sudoku.validate())
+        for difficulty in range(9):
+            sudoku = Sudoku()
+            sudoku.generate(difficulty=difficulty)
+            sudoku.solver()
+            self.assertTrue(sudoku.validate())
