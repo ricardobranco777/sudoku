@@ -48,8 +48,9 @@ class Sudoku:
     def solver(self, random=True):
         "Backtracking solver"
         for row, col in self.scan():
-            try_digits = list(FULL - self.get_row(row) - self.get_col(col) - self.get_box(row, col))
+            try_digits = FULL - self.get_row(row) - self.get_col(col) - self.get_box(row, col)
             if random:
+                try_digits = list(try_digits)
                 shuffle(try_digits)
             for num in try_digits:
                 self.grid[row][col] = num
