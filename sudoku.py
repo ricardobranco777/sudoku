@@ -60,9 +60,11 @@ class Sudoku:
             return False
         return True
 
-    def generate(self):
-        "Generate random complete puzzle"
-        return self.solver(random=True)
+    def generate(self, difficulty=None):
+        "Generate puzzle"
+        self.solver(random=True)
+        if difficulty is None:
+            return
 
     def validate(self):
         "Validate grid"
