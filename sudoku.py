@@ -1,6 +1,7 @@
 """Sudoku"""
 
 import sys
+from itertools import chain
 from random import shuffle
 from shutil import get_terminal_size
 
@@ -21,7 +22,7 @@ class Sudoku:
         return str(self.grid)
 
     def __str__(self):
-        return "".join(str(self.grid[row][col]) for row in range(9) for col in range(9))
+        return "".join(map(str, chain(*self.grid)))
 
     def get_row(self, row):
         "Get row"
